@@ -10,13 +10,22 @@ app.get('/', function(request, response){
     
 })
 
-io.on('connection', function(data) {
+io.on('connection', function(socket) {
   
     //console.log("Connection");
     count++;
-    data.send(count + " active sockets");
+    //data.send(count + " active sockets");
+    io.sockets.emit('broadcast', count)
+    
+    
+    socket.on('disconnect', function(data){
+        //data.send("User disconnected. " + count + "Users");
+        count--;
+        io.sockets.emit('broadcast', count)
+    })
     
 })
-server.listen(4000, function(req,res){
-    console.log('Catch the action at localhost:4000');
+
+server.listen(5000, function(req,res){
+    console.log('Catch the action at localhost:5000');
 });
